@@ -18,10 +18,10 @@ androidHybrid.listWebviews = function (cb) {
   var webviews = [];
   var definedDeviceSocket = this.args.androidDeviceSocket;
   this.adb.shell("cat /proc/net/unix", function (err, out) {
-    if (err) return cb(err);
+      if (err) return cb(err);
     _.each(out.split("\n"), function (line) {
-      line = line.trim();
-      var webviewPid = line.match(/@?webview_devtools_remote_(\d+)/);
+        line = line.trim();
+        var webviewPid = line.match(/@?_devtools_remote/);
       if (definedDeviceSocket) {
         if (line.indexOf("@" + definedDeviceSocket) ===
           line.length - definedDeviceSocket.length - 1) {
@@ -33,8 +33,9 @@ androidHybrid.listWebviews = function (cb) {
         }
       } else if (webviewPid) {
         // for multiple webviews a list of 'WEBVIEW_<index>' will be returned
-        // where <index> is zero based (same is in selendroid)
-        webviews.push(this.WEBVIEW_BASE + webviewPid[1]);
+          // where <index> is zero based (same is in selendroid)
+          //webviews.push(this.WEBVIEW_BASE + webviewPid[1]);
+          webviews.push(this.WEBVIEW_BASE + this.args.appPackage + "_devtools_remote");
       }
     }.bind(this));
     webviews = _.uniq(webviews);
@@ -47,17 +48,13 @@ androidHybrid.listWebviews = function (cb) {
     webviews = [];
 
     var getProcessNameFromWebview = function (view, cb) {
-      this.getProcessNameFromWebview(view, function (err, pkg) {
-        if (err) return cb(err);
-        webviews.push(this.WEBVIEW_BASE + pkg);
-        cb();
-      }.bind(this));
+        webviews.push(this.WEBVIEW_BASE + this.args.appPackage);
+        cb(null, webviews);
     }.bind(this);
 
     async.each(webviewsTmp, getProcessNameFromWebview, function (err) {
       if (err) return cb(err);
       logger.debug("Available contexts: " + this.contexts);
-      logger.debug(JSON.stringify(webviews));
       cb(null, webviews);
     }.bind(this));
   }.bind(this));
