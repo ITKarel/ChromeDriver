@@ -7,7 +7,7 @@ How to use with appium:
 provided here.
 
 2) Edit the androidHybrid.listWebviews method in ..\Appium\node_modules\appium\lib\devices\android\android-hybrid.js to 
-push {package name}_devtools_remote to the webviews list. 
+push {package name}_devtools_remote to the webviews list. The modified android-hybrid.js is provided in the reposistory.
 
 3) Ensure that you have remote debugging enabled in your WebView.
 
