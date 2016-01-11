@@ -9,3 +9,9 @@ provided here.
 2) Edit the androidHybrid.listWebviews method in ..\Appium\node_modules\appium\lib\devices\android\android-hybrid.js to 
 push {package name}_devtools_remote to the webviews list. 
 
+3) Ensure that you have remote debugging enabled in your WebView.
+
+4) Set the driver context to the webview. 
+
+  Set<String> contextNames = driver.getContextHandles();
+  driver.context((String) contextNames.toArray()[1]); // set context to WEBVIEW_{appPackage}
